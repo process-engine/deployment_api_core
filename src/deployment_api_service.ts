@@ -42,7 +42,11 @@ export class DeploymentApiService implements IDeploymentApiService {
     await this.processModelService.persistProcessDefinitions(executionContextFacade, payload.name, payload.xml, payload.overwriteExisting);
   }
 
-  public async importBpmnFromFile(context: DeploymentContext, filePath: string, overwriteExisting: boolean = true): Promise<void> {
+  public async importBpmnFromFile(context: DeploymentContext,
+                                  filePath: string,
+                                  processName?: string,
+                                  overwriteExisting: boolean = true,
+                                 ): Promise<void> {
 
     if (!filePath) {
       throw new Error('file does not exist');
@@ -50,8 +54,9 @@ export class DeploymentApiService implements IDeploymentApiService {
 
     // filePath will be something like "/someFilePath/process_file_name.bpmn"
     // The part we want to use with the import is "process_file_name".
-    const name: string = filePath.split('/').pop();
-    const nameWithoutExtension: string = name.split('.')[0];
+    const fileName: string = filePath.split('/').pop();
+
+    const nameWithoutExtension: string = processName || fileName.split('.')[0];
     const xml: string = await this._getXmlFromFile(filePath);
 
     const importPayload: ImportProcessModelRequestPayload = {

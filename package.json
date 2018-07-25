@@ -30,7 +30,7 @@
     "gulp": "^3.9.1",
     "gulptraum": "^2.3.0",
     "gulptraum-typescript": "^1.5.0",
-    "moment": "^1.5.0",
+    "moment": "^2.22.2",
     "tsconfig": "^7.0.0",
     "tslint": "^5.10.0",
     "typescript": "^2.8.3"
