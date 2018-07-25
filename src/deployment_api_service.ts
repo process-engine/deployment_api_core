@@ -1,3 +1,4 @@
+import {UnauthorizedError} from '@essential-projects/errors_ts';
 import {DeploymentContext, IDeploymentApiService, ImportProcessModelRequestPayload} from '@process-engine/deployment_api_contracts';
 
 import {
@@ -31,6 +32,8 @@ export class DeploymentApiService implements IDeploymentApiService {
 
   public async importBpmnFromXml(context: DeploymentContext, payload: ImportProcessModelRequestPayload): Promise<void> {
 
+    this._ensureIsAuthorized(context);
+
     const identity: IIdentity = {
       token: context.identity,
     };
@@ -47,6 +50,8 @@ export class DeploymentApiService implements IDeploymentApiService {
                                   processName?: string,
                                   overwriteExisting: boolean = true,
                                  ): Promise<void> {
+
+    this._ensureIsAuthorized(context);
 
     if (!filePath) {
       throw new Error('file does not exist');
@@ -78,5 +83,14 @@ export class DeploymentApiService implements IDeploymentApiService {
         }
       });
     });
+  }
+
+  private _ensureIsAuthorized(context: DeploymentContext): void {
+
+    // Note: When using an external accessor, this check is performed by the ConsumerApiHttp module.
+    // Since that component is bypassed by the internal accessor, we need to perform this check here.
+    if (!context || !context.identity) {
+      throw new UnauthorizedError('No auth token provided!');
+    }
   }
 }
