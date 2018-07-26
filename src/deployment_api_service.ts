@@ -11,6 +11,7 @@ import {
 import {IIdentity} from '@essential-projects/iam_contracts';
 
 import * as fs from 'fs';
+import * as path from 'path';
 
 export class DeploymentApiService implements IDeploymentApiService {
 
@@ -57,15 +58,11 @@ export class DeploymentApiService implements IDeploymentApiService {
       throw new Error('file does not exist');
     }
 
-    // filePath will be something like "/someFilePath/process_file_name.bpmn"
-    // The part we want to use with the import is "process_file_name".
-    const fileName: string = filePath.split('/').pop();
-
-    const nameWithoutExtension: string = processName || fileName.split('.')[0];
+    const parsedFileName: path.ParsedPath = path.parse(filePath);
     const xml: string = await this._getXmlFromFile(filePath);
 
     const importPayload: ImportProcessModelRequestPayload = {
-      name: nameWithoutExtension,
+      name: processName || parsedFileName.name,
       xml: xml,
       overwriteExisting: overwriteExisting,
     };
@@ -73,9 +70,9 @@ export class DeploymentApiService implements IDeploymentApiService {
     await this.importBpmnFromXml(context, importPayload);
   }
 
-  private async _getXmlFromFile(path: string): Promise<string> {
+  private async _getXmlFromFile(filePath: string): Promise<string> {
     return new Promise<string>((resolve: Function, reject: Function): void => {
-      fs.readFile(path, 'utf8', (error: Error, xmlString: string): void => {
+      fs.readFile(filePath, 'utf8', (error: Error, xmlString: string): void => {
         if (error) {
           reject(error);
         } else {
