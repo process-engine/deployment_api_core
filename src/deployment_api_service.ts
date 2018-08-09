@@ -1,5 +1,5 @@
 import {UnauthorizedError} from '@essential-projects/errors_ts';
-import {DeploymentContext, IDeploymentApiService, ImportProcessModelRequestPayload} from '@process-engine/deployment_api_contracts';
+import {DeploymentContext, IDeploymentApiService, ImportProcessDefinitionsRequestPayload} from '@process-engine/deployment_api_contracts';
 
 import {
   ExecutionContext,
@@ -31,7 +31,7 @@ export class DeploymentApiService implements IDeploymentApiService {
     return this._processModelService;
   }
 
-  public async importBpmnFromXml(context: DeploymentContext, payload: ImportProcessModelRequestPayload): Promise<void> {
+  public async importBpmnFromXml(context: DeploymentContext, payload: ImportProcessDefinitionsRequestPayload): Promise<void> {
 
     this._ensureIsAuthorized(context);
 
@@ -48,7 +48,7 @@ export class DeploymentApiService implements IDeploymentApiService {
 
   public async importBpmnFromFile(context: DeploymentContext,
                                   filePath: string,
-                                  processName?: string,
+                                  name?: string,
                                   overwriteExisting: boolean = true,
                                  ): Promise<void> {
 
@@ -61,8 +61,8 @@ export class DeploymentApiService implements IDeploymentApiService {
     const parsedFileName: path.ParsedPath = path.parse(filePath);
     const xml: string = await this._getXmlFromFile(filePath);
 
-    const importPayload: ImportProcessModelRequestPayload = {
-      name: processName || parsedFileName.name,
+    const importPayload: ImportProcessDefinitionsRequestPayload = {
+      name: name || parsedFileName.name,
       xml: xml,
       overwriteExisting: overwriteExisting,
     };
