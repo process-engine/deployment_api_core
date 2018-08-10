@@ -1,6 +1,6 @@
 {
   "name": "@process-engine/deployment_api_core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Contains all the core components for the deployment api. ",
   "main": "dist/commonjs/index.js",
   "typings": "dist/index.d.ts",
