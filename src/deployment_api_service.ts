@@ -4,7 +4,7 @@ import * as path from 'path';
 import {UnauthorizedError} from '@essential-projects/errors_ts';
 import {IIdentity} from '@essential-projects/iam_contracts';
 
-import {IDeploymentApiService, ImportProcessDefinitionsRequestPayload} from '@process-engine/deployment_api_contracts';
+import {IDeploymentApi, ImportProcessDefinitionsRequestPayload} from '@process-engine/deployment_api_contracts';
 
 import {
   ExecutionContext,
@@ -13,7 +13,7 @@ import {
   IProcessModelService,
 } from '@process-engine/process_engine_contracts';
 
-export class DeploymentApiService implements IDeploymentApiService {
+export class DeploymentApiService implements IDeploymentApi {
 
   private _processModelService: IProcessModelService;
   private _executionContextFacadeFactory: IExecutionContextFacadeFactory;
