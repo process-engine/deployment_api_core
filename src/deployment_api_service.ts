@@ -1,5 +1,10 @@
+import * as fs from 'fs';
+import * as path from 'path';
+
 import {UnauthorizedError} from '@essential-projects/errors_ts';
-import {DeploymentContext, IDeploymentApiService, ImportProcessDefinitionsRequestPayload} from '@process-engine/deployment_api_contracts';
+import {IIdentity} from '@essential-projects/iam_contracts';
+
+import {IDeploymentApi, ImportProcessDefinitionsRequestPayload} from '@process-engine/deployment_api_contracts';
 
 import {
   ExecutionContext,
@@ -8,12 +13,7 @@ import {
   IProcessModelService,
 } from '@process-engine/process_engine_contracts';
 
-import {IIdentity} from '@essential-projects/iam_contracts';
-
-import * as fs from 'fs';
-import * as path from 'path';
-
-export class DeploymentApiService implements IDeploymentApiService {
+export class DeploymentApiService implements IDeploymentApi {
 
   private _processModelService: IProcessModelService;
   private _executionContextFacadeFactory: IExecutionContextFacadeFactory;
@@ -31,13 +31,9 @@ export class DeploymentApiService implements IDeploymentApiService {
     return this._processModelService;
   }
 
-  public async importBpmnFromXml(context: DeploymentContext, payload: ImportProcessDefinitionsRequestPayload): Promise<void> {
+  public async importBpmnFromXml(identity: IIdentity, payload: ImportProcessDefinitionsRequestPayload): Promise<void> {
 
-    this._ensureIsAuthorized(context);
-
-    const identity: IIdentity = {
-      token: context.identity,
-    };
+    this._ensureIsAuthorized(identity);
 
     const newExecutionContext: ExecutionContext = new ExecutionContext(identity);
 
@@ -46,13 +42,13 @@ export class DeploymentApiService implements IDeploymentApiService {
     await this.processModelService.persistProcessDefinitions(executionContextFacade, payload.name, payload.xml, payload.overwriteExisting);
   }
 
-  public async importBpmnFromFile(context: DeploymentContext,
+  public async importBpmnFromFile(identity: IIdentity,
                                   filePath: string,
                                   name?: string,
                                   overwriteExisting: boolean = true,
                                  ): Promise<void> {
 
-    this._ensureIsAuthorized(context);
+    this._ensureIsAuthorized(identity);
 
     if (!filePath) {
       throw new Error('file does not exist');
@@ -67,7 +63,7 @@ export class DeploymentApiService implements IDeploymentApiService {
       overwriteExisting: overwriteExisting,
     };
 
-    await this.importBpmnFromXml(context, importPayload);
+    await this.importBpmnFromXml(identity, importPayload);
   }
 
   private async _getXmlFromFile(filePath: string): Promise<string> {
@@ -82,11 +78,11 @@ export class DeploymentApiService implements IDeploymentApiService {
     });
   }
 
-  private _ensureIsAuthorized(context: DeploymentContext): void {
+  private _ensureIsAuthorized(identity: IIdentity): void {
 
     // Note: When using an external accessor, this check is performed by the ConsumerApiHttp module.
     // Since that component is bypassed by the internal accessor, we need to perform this check here.
-    if (!context || !context.identity) {
+    if (!identity || typeof identity.token !== 'string') {
       throw new UnauthorizedError('No auth token provided!');
     }
   }
