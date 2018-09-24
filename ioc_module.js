@@ -6,7 +6,7 @@ function registerInContainer(container) {
 
   container
     .register('DeploymentApiService', DeploymentApiService)
-    .dependencies('ExecutionContextFacadeFactory', 'ProcessModelService')
+    .dependencies('ProcessModelService')
     .singleton();
 }
 
