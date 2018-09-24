@@ -6,25 +6,14 @@ import {IIdentity} from '@essential-projects/iam_contracts';
 
 import {IDeploymentApi, ImportProcessDefinitionsRequestPayload} from '@process-engine/deployment_api_contracts';
 
-import {
-  ExecutionContext,
-  IExecutionContextFacade,
-  IExecutionContextFacadeFactory,
-  IProcessModelService,
-} from '@process-engine/process_engine_contracts';
+import {IProcessModelService} from '@process-engine/process_engine_contracts';
 
 export class DeploymentApiService implements IDeploymentApi {
 
   private _processModelService: IProcessModelService;
-  private _executionContextFacadeFactory: IExecutionContextFacadeFactory;
 
-  constructor(executionContextFacadeFactory: IExecutionContextFacadeFactory, processModelService: IProcessModelService) {
-    this._executionContextFacadeFactory = executionContextFacadeFactory;
+  constructor(processModelService: IProcessModelService) {
     this._processModelService = processModelService;
-  }
-
-  private get executionContextFacadeFactory(): IExecutionContextFacadeFactory {
-    return this._executionContextFacadeFactory;
   }
 
   private get processModelService(): IProcessModelService {
@@ -35,11 +24,7 @@ export class DeploymentApiService implements IDeploymentApi {
 
     this._ensureIsAuthorized(identity);
 
-    const newExecutionContext: ExecutionContext = new ExecutionContext(identity);
-
-    const executionContextFacade: IExecutionContextFacade = this.executionContextFacadeFactory.create(newExecutionContext);
-
-    await this.processModelService.persistProcessDefinitions(executionContextFacade, payload.name, payload.xml, payload.overwriteExisting);
+    await this.processModelService.persistProcessDefinitions(identity, payload.name, payload.xml, payload.overwriteExisting);
   }
 
   public async importBpmnFromFile(identity: IIdentity,
