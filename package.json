@@ -1,6 +1,6 @@
 {
   "name": "@process-engine/deployment_api_core",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "description": "Contains all the core components for the deployment api. ",
   "main": "dist/commonjs/index.js",
   "typings": "dist/index.d.ts",
@@ -21,8 +21,8 @@
   "dependencies": {
     "@essential-projects/errors_ts": "~1.4.0",
     "@essential-projects/iam_contracts": "~3.2.0",
-    "@process-engine/deployment_api_contracts": "~0.4.0",
-    "@process-engine/process_engine_contracts": "~30.1.0",
+    "@process-engine/deployment_api_contracts": "~1.0.0",
+    "@process-engine/process_engine_contracts": "~33.0.1",
     "moment": "2.22.2"
   },
   "devDependencies": {
