@@ -20,9 +20,9 @@
   "homepage": "https://github.com/process-engine/deployment_api_core#readme",
   "dependencies": {
     "@essential-projects/errors_ts": "~1.4.0",
-    "@essential-projects/iam_contracts": "~3.2.0",
+    "@essential-projects/iam_contracts": "~3.3.0",
     "@process-engine/deployment_api_contracts": "~1.0.0",
-    "@process-engine/process_engine_contracts": "~36.1.0",
+    "@process-engine/process_engine_contracts": "~36.3.0",
     "moment": "2.22.2"
   },
   "devDependencies": {
