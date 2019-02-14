@@ -21,7 +21,7 @@
   "dependencies": {
     "@essential-projects/errors_ts": "~1.4.0",
     "@process-engine/deployment_api_contracts": "~1.0.0",
-    "@process-engine/process_engine_contracts": "^38.0.0",
+    "@process-engine/process_engine_contracts": "^39.0.0",
     "moment": "~2.24.0"
   },
   "devDependencies": {
