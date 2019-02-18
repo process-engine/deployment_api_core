@@ -16,15 +16,11 @@ export class DeploymentApiService implements IDeploymentApi {
     this._processModelService = processModelService;
   }
 
-  private get processModelService(): IProcessModelService {
-    return this._processModelService;
-  }
-
   public async importBpmnFromXml(identity: IIdentity, payload: ImportProcessDefinitionsRequestPayload): Promise<void> {
 
     this._ensureIsAuthorized(identity);
 
-    await this.processModelService.persistProcessDefinitions(identity, payload.name, payload.xml, payload.overwriteExisting);
+    await this._processModelService.persistProcessDefinitions(identity, payload.name, payload.xml, payload.overwriteExisting);
   }
 
   public async importBpmnFromFile(identity: IIdentity,
