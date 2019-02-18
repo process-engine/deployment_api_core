@@ -6,7 +6,7 @@ import {IIdentity} from '@essential-projects/iam_contracts';
 
 import {IDeploymentApi, ImportProcessDefinitionsRequestPayload} from '@process-engine/deployment_api_contracts';
 
-import {IProcessModelService} from '@process-engine/process_engine_contracts';
+import {IProcessModelService} from '@process-engine/process_model.contracts';
 
 export class DeploymentApiService implements IDeploymentApi {
 
