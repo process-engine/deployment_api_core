@@ -19,9 +19,9 @@
   },
   "homepage": "https://github.com/process-engine/deployment_api_core#readme",
   "dependencies": {
-    "@essential-projects/errors_ts": "~1.4.0",
-    "@process-engine/deployment_api_contracts": "~1.0.0",
-    "@process-engine/process_model.contracts": "feature~initial_implementation",
+    "@essential-projects/errors_ts": "^1.4.0",
+    "@process-engine/deployment_api_contracts": "^1.0.0",
+    "@process-engine/process_model.contracts": "^1.0.0",
     "moment": "~2.24.0"
   },
   "devDependencies": {
