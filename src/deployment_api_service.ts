@@ -45,6 +45,10 @@ export class DeploymentApiService implements IDeploymentApi {
     await this.importBpmnFromXml(identity, importPayload);
   }
 
+  public async undeploy(identity: IIdentity, processModelId: string): Promise<void> {
+    return this._processModelUseCases.deleteProcessModel(identity, processModelId);
+  }
+
   private async _getXmlFromFile(filePath: string): Promise<string> {
     return new Promise<string>((resolve: Function, reject: Function): void => {
       fs.readFile(filePath, 'utf8', (error: Error, xmlString: string): void => {
