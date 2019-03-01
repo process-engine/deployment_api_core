@@ -46,6 +46,8 @@ export class DeploymentApiService implements IDeploymentApi {
   }
 
   public async undeploy(identity: IIdentity, processModelId: string): Promise<void> {
+    this._ensureIsAuthorized(identity);
+
     return this._processModelUseCases.deleteProcessModel(identity, processModelId);
   }
 
