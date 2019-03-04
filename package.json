@@ -20,7 +20,7 @@
   "homepage": "https://github.com/process-engine/deployment_api_core#readme",
   "dependencies": {
     "@essential-projects/errors_ts": "^1.4.0",
-    "@process-engine/deployment_api_contracts": "feature~undeploy_process_models",
+    "@process-engine/deployment_api_contracts": "2.0.0-480671dd-b20",
     "@process-engine/process_model.contracts": "^2.0.0",
     "moment": "~2.24.0"
   },
