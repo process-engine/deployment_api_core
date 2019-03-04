@@ -6,21 +6,19 @@ import {IIdentity} from '@essential-projects/iam_contracts';
 
 import {IDeploymentApi, ImportProcessDefinitionsRequestPayload} from '@process-engine/deployment_api_contracts';
 
-import {IProcessModelService} from '@process-engine/process_model.contracts';
+import {IProcessModelUseCases} from '@process-engine/process_model.contracts';
 
 export class DeploymentApiService implements IDeploymentApi {
+  private _processModelUseCases: IProcessModelUseCases;
 
-  private _processModelService: IProcessModelService;
-
-  constructor(processModelService: IProcessModelService) {
-    this._processModelService = processModelService;
+  constructor(processModelUseCases: IProcessModelUseCases) {
+    this._processModelUseCases = processModelUseCases;
   }
 
   public async importBpmnFromXml(identity: IIdentity, payload: ImportProcessDefinitionsRequestPayload): Promise<void> {
-
     this._ensureIsAuthorized(identity);
 
-    await this._processModelService.persistProcessDefinitions(identity, payload.name, payload.xml, payload.overwriteExisting);
+    await this._processModelUseCases.persistProcessDefinitions(identity, payload.name, payload.xml, payload.overwriteExisting);
   }
 
   public async importBpmnFromFile(identity: IIdentity,
@@ -45,6 +43,12 @@ export class DeploymentApiService implements IDeploymentApi {
     };
 
     await this.importBpmnFromXml(identity, importPayload);
+  }
+
+  public async undeploy(identity: IIdentity, processModelId: string): Promise<void> {
+    this._ensureIsAuthorized(identity);
+
+    return this._processModelUseCases.deleteProcessModel(identity, processModelId);
   }
 
   private async _getXmlFromFile(filePath: string): Promise<string> {
