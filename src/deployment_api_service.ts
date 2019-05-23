@@ -9,34 +9,36 @@ import {IDeploymentApi, ImportProcessDefinitionsRequestPayload} from '@process-e
 import {IProcessModelUseCases} from '@process-engine/process_model.contracts';
 
 export class DeploymentApiService implements IDeploymentApi {
-  private _processModelUseCases: IProcessModelUseCases;
+
+  private processModelUseCases: IProcessModelUseCases;
 
   constructor(processModelUseCases: IProcessModelUseCases) {
-    this._processModelUseCases = processModelUseCases;
+    this.processModelUseCases = processModelUseCases;
   }
 
   public async importBpmnFromXml(identity: IIdentity, payload: ImportProcessDefinitionsRequestPayload): Promise<void> {
-    this._ensureIsAuthorized(identity);
+    this.ensureIsAuthorized(identity);
 
-    await this._processModelUseCases.persistProcessDefinitions(identity, payload.name, payload.xml, payload.overwriteExisting);
+    await this.processModelUseCases.persistProcessDefinitions(identity, payload.name, payload.xml, payload.overwriteExisting);
   }
 
-  public async importBpmnFromFile(identity: IIdentity,
-                                  filePath: string,
-                                  name?: string,
-                                  overwriteExisting: boolean = true,
-                                 ): Promise<void> {
+  public async importBpmnFromFile(
+    identity: IIdentity,
+    filePath: string,
+    name?: string,
+    overwriteExisting: boolean = true,
+  ): Promise<void> {
 
-    this._ensureIsAuthorized(identity);
+    this.ensureIsAuthorized(identity);
 
     if (!filePath) {
       throw new Error('file does not exist');
     }
 
-    const parsedFileName: path.ParsedPath = path.parse(filePath);
-    const xml: string = await this._getXmlFromFile(filePath);
+    const parsedFileName = path.parse(filePath);
+    const xml = await this.getXmlFromFile(filePath);
 
-    const importPayload: ImportProcessDefinitionsRequestPayload = {
+    const importPayload = {
       name: name || parsedFileName.name,
       xml: xml,
       overwriteExisting: overwriteExisting,
@@ -46,12 +48,12 @@ export class DeploymentApiService implements IDeploymentApi {
   }
 
   public async undeploy(identity: IIdentity, processModelId: string): Promise<void> {
-    this._ensureIsAuthorized(identity);
+    this.ensureIsAuthorized(identity);
 
-    return this._processModelUseCases.deleteProcessModel(identity, processModelId);
+    return this.processModelUseCases.deleteProcessModel(identity, processModelId);
   }
 
-  private async _getXmlFromFile(filePath: string): Promise<string> {
+  private async getXmlFromFile(filePath: string): Promise<string> {
     return new Promise<string>((resolve: Function, reject: Function): void => {
       fs.readFile(filePath, 'utf8', (error: Error, xmlString: string): void => {
         if (error) {
@@ -63,7 +65,7 @@ export class DeploymentApiService implements IDeploymentApi {
     });
   }
 
-  private _ensureIsAuthorized(identity: IIdentity): void {
+  private ensureIsAuthorized(identity: IIdentity): void {
 
     // Note: When using an external accessor, this check is performed by the ConsumerApiHttp module.
     // Since that component is bypassed by the internal accessor, we need to perform this check here.
@@ -71,4 +73,5 @@ export class DeploymentApiService implements IDeploymentApi {
       throw new UnauthorizedError('No auth token provided!');
     }
   }
+
 }
